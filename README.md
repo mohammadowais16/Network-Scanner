@@ -1,104 +1,119 @@
 # Network Scanner
 
-A command-line tool for analyzing hosts on a network using various scanning techniques including ICMP echo requests, TCP port scanning, and ARP scanning. This tool is designed for network administrators and security professionals to assess network configurations and identify potential vulnerabilities.
+A Python command-line project for checking host availability, scanning TCP ports, and discovering devices on a local network with ARP.
+
+This is a learning project for networking and security fundamentals. Use it only on systems and networks you own or have explicit permission to test.
 
 ## Features
 
--   **ICMP Echo Request (Ping) Scanning**: Quickly check the availability of hosts.
--   **TCP Port Scanning**: Identify open ports and services running on a host.
--   **ARP Network Scanning**: Discover devices on a local network.
--   **Configurable Scan Types and Timeouts**: Customize scans to suit your needs.
--   **Support for Port Ranges**: Scan specific ports or entire ranges.
--   **Detailed Scan Results Output**: Get comprehensive information about each scan.
+- **ICMP scan** — check whether a target responds to ping.
+- **TCP port scan** — check selected ports or a port range.
+- **ARP scan** — discover devices on a local network.
+- **Flexible targets** — accept an IP address or CIDR network.
+- **Configurable timeout** — set how long each scan waits for a response.
 
 ## Requirements
 
--   **Python 3.6 or higher**: Ensure you have the correct version of Python installed.
--   **Scapy 2.5.0 or higher**: Required for packet crafting and network interactions.
--   **Root/Administrator Privileges**: Necessary for raw socket operations.
+- Python 3
+- Dependencies listed in `requirements.txt`
+- Administrator/root privileges may be required for raw packet operations, depending on your operating system and scan type.
 
-## Installation
+## Setup
 
-1. **Clone the Repository**:
+Clone this repository:
 
 ```bash
-git clone https://github.com/yourusername/network-scanner.git
-cd network-scanner
+git clone https://github.com/mohammadowais16/Network-Scanner.git
+cd Network-Scanner
 ```
 
-2. **Install Dependencies**:
+Create and activate a virtual environment (recommended):
 
 ```bash
-pip install -r requirements.txt
+python -m venv .venv
+```
+
+On Windows:
+
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+On macOS/Linux:
+
+```bash
+source .venv/bin/activate
+```
+
+Install dependencies:
+
+```bash
+python -m pip install -r requirements.txt
 ```
 
 ## Usage
 
-Basic usage:
+Run the scanner from the repository root:
 
 ```bash
 python src/main.py <target> [options]
 ```
 
-### Examples
-
-1. **Scan a Single Host with All Scan Types**:
+Examples:
 
 ```bash
+# Scan a single host using the default scan types
 python src/main.py 192.168.1.1
+
+# Run an ICMP scan
+python src/main.py 192.168.1.1 --type icmp
+
+# Scan selected TCP ports
+python src/main.py 192.168.1.1 --type tcp --ports 80,443,8080
+
+# Scan a port range
+python src/main.py 192.168.1.1 --type tcp --ports 1-1000
+
+# Discover devices on a local subnet with ARP
+python src/main.py 192.168.1.0/24 --type arp
 ```
 
-2. **Perform Only ICMP Scan**:
+Replace the example addresses with targets you are authorized to scan.
+
+## Options
+
+| Option | Description |
+| --- | --- |
+| `target` | Target IP address or network in CIDR notation |
+| `-t, --type` | Scan type: `all`, `icmp`, `tcp`, or `arp` (default: `all`) |
+| `-p, --ports` | TCP ports, such as `80,443` or a range such as `1-1000` |
+| `-T, --timeout` | Timeout in seconds (default: `2`) |
+
+Show all command-line options with:
 
 ```bash
-python src/main.py 192.168.1.1 -t icmp
+python src/main.py --help
 ```
 
-3. **Scan Specific Ports**:
+## Notes
 
-```bash
-python src/main.py 192.168.1.1 -p 80,443,8080
-```
+- Some scan types may require elevated privileges.
+- Firewalls and network configuration can affect scan results.
+- Only scan systems and networks for which you have permission.
 
-4. **Scan a Port Range**:
+## Project layout
 
-```bash
-python src/main.py 192.168.1.1 -p 1-1000
-```
-
-5. **Scan a Network Subnet**:
-
-```bash
-python src/main.py 192.168.1.0/24 -t arp
-```
-
-### Command Line Options
-
--   `target`: Target IP address or network (required)
--   `-t, --type`: Type of scan to perform (choices: all, icmp, tcp, arp; default: all)
--   `-p, --ports`: Ports to scan (e.g., 80,443 or 1-1000)
--   `-T, --timeout`: Timeout in seconds for each scan (default: 2)
-
-## Project Structure
-
-```
-network-scanner/
+```text
+Network-Scanner/
 ├── src/
-│   ├── main.py         # Command-line interface
-│   └── scanner.py      # Core scanning functionality
-├── tests/              # Test files
-├── docs/               # Documentation
-├── requirements.txt    # Project dependencies
-└── README.md           # Project documentation
+│   ├── main.py
+│   └── scanner.py
+├── tests/
+├── docs/
+├── requirements.txt
+└── README.md
 ```
-
-## Security Considerations
-
--   **Intrusive Nature**: This tool performs network scanning which may be considered intrusive.
--   **Permission**: Use only on networks you have permission to scan.
--   **Network Restrictions**: Some networks may block ICMP or ARP requests.
--   **Privileges**: Running the tool requires elevated privileges.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+See [LICENSE](LICENSE) for license details.
